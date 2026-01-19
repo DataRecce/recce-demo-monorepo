@@ -9,7 +9,7 @@ default:
       private_key_passphrase: "{{ env_var('SNOWFLAKE_PEM_PASSPHRASE') }}"
       role: RECCE
       database: RECCE
-      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'GITLAB_JAFFLE_SHOP_DEV') | as_text }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'JAFFLE_SHOP_DEV') | as_text }}"
       warehouse: LOAD_WH
       threads: 4
     prod:
@@ -20,6 +20,6 @@ default:
       private_key_passphrase: "{{ env_var('SNOWFLAKE_PEM_PASSPHRASE') }}"
       role: RECCE
       database: RECCE
-      schema: GITLAB_JAFFLE_SHOP_PROD
+      schema: JAFFLE_SHOP_PROD
       warehouse: LOAD_WH
       threads: 4
