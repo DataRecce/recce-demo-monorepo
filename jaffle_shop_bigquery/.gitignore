@@ -2,8 +2,10 @@
 venv
 .env
 env
+.envrc
 
 target/
+target-base/
 dbt_packages/
 logs/
 

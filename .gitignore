@@ -1,5 +1,6 @@
 # dbt artifacts
 target/
+target-base/
 dbt_packages/
 logs/
 
@@ -11,6 +12,7 @@ __pycache__/
 *.so
 .env
 .venv
+.envrc
 env/
 venv/
 ENV/
@@ -27,7 +29,6 @@ ENV/
 Thumbs.db
 
 # Credentials (never commit)
-profiles.yml
 *.json
 !package.json
 !package-lock.json
