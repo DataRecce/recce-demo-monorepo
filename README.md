@@ -2,29 +2,20 @@
 
 A demonstration monorepo containing multiple dbt projects for showcasing [Recce Cloud](https://cloud.datarecce.io/) monorepo support.
 
-## Repository Structure
-
-```
-recce-demo-monorepo/
-├── jaffle_shop_snowflake/    # Snowflake-based dbt project
-├── jaffle_shop_bigquery/     # BigQuery-based dbt project
-└── README.md
-```
-
 ## Projects
 
-| Project | Data Warehouse | Description |
-|---------|----------------|-------------|
-| `jaffle_shop_snowflake` | Snowflake | Jaffle Shop demo project configured for Snowflake |
-| `jaffle_shop_bigquery` | BigQuery | Jaffle Shop demo project configured for BigQuery |
+| Project | Data Warehouse | Path |
+|---------|----------------|------|
+| Jaffle Shop Snowflake | Snowflake | `jaffle_shop_snowflake/` |
+| Jaffle Shop BigQuery | BigQuery | `jaffle_shop_bigquery/` |
 
 ## Prerequisites
 
-- Python 3.9+
-- dbt-core 1.5.0+
-- Appropriate dbt adapter (`dbt-snowflake` or `dbt-bigquery`)
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
+- Python 3.12+
+- Access to Snowflake or BigQuery
 
-## Setup
+## Quick Start
 
 ### 1. Clone the Repository
 
@@ -33,75 +24,70 @@ git clone https://github.com/DataRecce/recce-demo-monorepo.git
 cd recce-demo-monorepo
 ```
 
-### 2. Configure Your Profile
+### 2. Set Up Environment Variables
 
-Each project expects a profile named `default` in your `~/.dbt/profiles.yml`. Configure the appropriate profile for your data warehouse:
+Each project includes a `profiles.yml` that references environment variables. Set them up before running dbt.
 
-**For Snowflake (`jaffle_shop_snowflake`):**
-```yaml
-default:
-  target: dev
-  outputs:
-    dev:
-      type: snowflake
-      account: <your-account>
-      user: <your-user>
-      password: <your-password>
-      role: <your-role>
-      database: <your-database>
-      warehouse: <your-warehouse>
-      schema: jaffle_shop_snowflake
-      threads: 4
-```
-
-**For BigQuery (`jaffle_shop_bigquery`):**
-```yaml
-default:
-  target: dev
-  outputs:
-    dev:
-      type: bigquery
-      method: oauth
-      project: <your-gcp-project>
-      dataset: jaffle_shop_bigquery
-      threads: 4
-```
-
-### 3. Install Dependencies
-
-Navigate to the project you want to work with and install dependencies:
+<details>
+<summary><b>Snowflake Environment Variables</b></summary>
 
 ```bash
+export SNOWFLAKE_ACCOUNT="your-account"
+export SNOWFLAKE_USER="your-user"
+export SNOWFLAKE_PEM_FILEPATH="/path/to/your/key.pem"
+export SNOWFLAKE_PEM_PASSPHRASE="your-passphrase"
+export SNOWFLAKE_SCHEMA="your-schema"  # optional, defaults to GITLAB_JAFFLE_SHOP_DEV
+```
+</details>
+
+<details>
+<summary><b>BigQuery Environment Variables</b></summary>
+
+```bash
+export BQ_PROJECT="your-gcp-project"
+export BQ_DATASET="your-dataset"
+export BQ_KEYFILE_PATH="/path/to/your/service-account.json"
+```
+</details>
+
+### 3. Set Up and Run a Project
+
+```bash
+# Go to a project directory
 cd jaffle_shop_snowflake  # or jaffle_shop_bigquery
-pip install -r requirements.txt
-dbt deps
+
+# Create virtual environment
+uv venv --python 3.12
+
+# Install Python dependencies
+uv pip install -r requirements.txt
+
+# Install dbt packages
+uv run dbt deps
+
+# Load seed data and build models
+uv run dbt seed --full-refresh --vars '{"load_source_data": true}'
+uv run dbt build
 ```
 
-### 4. Run dbt
-
-```bash
-dbt seed    # Load seed data
-dbt run     # Run models
-dbt test    # Run tests
-```
-
-## Recce Cloud Monorepo Configuration
+## Recce Cloud Integration
 
 To onboard this monorepo to Recce Cloud:
 
 1. Connect your repository to Recce Cloud
-2. Configure each dbt project path in the Recce Cloud settings
-3. Set up the appropriate warehouse credentials for each project
+2. Configure each dbt project path in settings
+3. Set up warehouse credentials for each project
 
-For detailed instructions, see the [Recce Cloud Monorepo Documentation](https://datarecce.io/docs/monorepo).
+For detailed instructions, see the [Recce Cloud Documentation](https://datarecce.io/docs).
 
-## Related Resources
+## Resources
 
 - [Recce Cloud](https://cloud.datarecce.io/)
 - [Recce Documentation](https://datarecce.io/docs)
 - [dbt Documentation](https://docs.getdbt.com/)
+- [uv Documentation](https://docs.astral.sh/uv/)
 - [Original Jaffle Shop](https://github.com/dbt-labs/jaffle-shop)
 
 ## License
 
-This project is based on the [Jaffle Shop](https://github.com/dbt-labs/jaffle-shop) by dbt Labs, licensed under the Apache License 2.0.
+Based on [Jaffle Shop](https://github.com/dbt-labs/jaffle-shop) by dbt Labs, licensed under Apache License 2.0.
